@@ -1,53 +1,176 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Games</title>
-    <link rel="stylesheet" href="/style.css">
+    <script>
+        fetch('/topbar.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('topbar-container').innerHTML = data;
+            })
+            .catch(error => console.error('Error loading topbar:', error));
+    </script>
+    <style>
+
+.header {
+    background: linear-gradient(to bottom, #254525 0%, #1b2838 100%);
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #4c834c;
+}
+
+.header h1 {
+    color: #00ff00;
+    font-size: 24px;
+    font-weight: normal;
+    margin: 0;
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+}
+
+
+
+
+        body {
+            background-color: #1b2838;
+            color: #8f98a0;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0px;
+        }
+
+        .container {
+            background: #171d25;
+            color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        button {
+            background-color: #0084ff;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        select {
+            background-color: #333;
+            color: white;
+            font-size: 14px;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+
+        .loading-indicator {
+            color: #aaa;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+        }
+
+        .game-container {
+            background-color: #0a1e28;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            max-width: 800px;
+            height: 600px;
+            margin: 20px auto;
+            padding: 0;
+            border: 1px solid #4c834c;
+            position: relative;
+        }
+
+        .game-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .button-fullscreen {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 10;
+            background-color: #1b2838;
+            color: #4c834c;
+            padding: 5px 10px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .button-fullscreen:hover {
+            background-color: #0a1e28;
+        }
+    </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Select a Game</h1>
-        <select id="gameSelector">
-            <option value="">Select a game...</option>
-            <option value="/JK25/">JK25</option>
-            <option value="/JS25/">JS25</option>
-            <option value="/TM17/">TM17</option>
-        </select>
+<div id="topbar-container"></div>
 
-        <div id="gameContainer" class="game-container">
-            <div class="loading-indicator">Loading...</div>
-        </div>
+<div class="container">
+    <h1>Select a Game</h1>
+    <select id="gameSelector">
+        <option value="">null</option>
+        <option value="/JK25/">JK25</option>
+        <option value="/JS25/">JS25</option>
+        <option value="/TM17/">TM17</option>
+    </select>
 
-        <button onclick="toggleFullscreen()">Fullscreen</button>
+    <div id="gameContainer" class="game-container">
+        <div class="loading-indicator">Select a game to load.</div>
     </div>
+</div>
 
-    <script>
-        document.getElementById('gameSelector').addEventListener('change', function() {
-            const selectedGame = this.value;
-            const gameContainer = document.getElementById('gameContainer');
-            if (selectedGame) {
-                gameContainer.innerHTML = `<iframe src="${selectedGame}" width="100%" height="auto" frameborder="0"></iframe>`;
-            } else {
-                gameContainer.innerHTML = '<div class="loading-indicator">Select a game to load.</div>';
-            }
-        });
+<script>
+    document.getElementById('gameSelector').addEventListener('change', function () {
+        const selectedGame = this.value;
+        const gameContainer = document.getElementById('gameContainer');
+        const fullscreenButton = document.getElementById('fullscreenButton');
 
-        function toggleFullscreen() {
-            const iframe = document.querySelector('iframe');
+        if (selectedGame) {
+            gameContainer.innerHTML = `
+                <iframe src="${selectedGame}" allowfullscreen></iframe>
+                <button id="fullscreenButton" class="button-fullscreen" onclick="toggleFullscreen()">Fullscreen</button>
+            `;
+            // Show the button
+            fullscreenButton.style.display = 'block';
+        } else {
+            gameContainer.innerHTML = '<div class="loading-indicator">Select a game to load.</div>';
+            // Hide the button
+            fullscreenButton.style.display = 'none';
+        }
+    });
+
+    function toggleFullscreen() {
+        const iframe = document.querySelector('iframe');
+        if (iframe) {
             if (iframe.requestFullscreen) {
                 iframe.requestFullscreen();
-            } else if (iframe.mozRequestFullScreen) { // Firefox
+            } else if (iframe.mozRequestFullScreen) {
                 iframe.mozRequestFullScreen();
-            } else if (iframe.webkitRequestFullscreen) { // Chrome, Safari and Opera
+            } else if (iframe.webkitRequestFullscreen) {
                 iframe.webkitRequestFullscreen();
-            } else if (iframe.msRequestFullscreen) { // IE/Edge
+            } else if (iframe.msRequestFullscreen) {
                 iframe.msRequestFullscreen();
             }
         }
-    </script>
+    }
+</script>
 
 </body>
 </html>
