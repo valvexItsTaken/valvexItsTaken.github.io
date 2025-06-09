@@ -4,10 +4,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Games</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
 <body>
 
-    <h1><a href="/JK25/">JK25</a></h1>
-    <h1><a href="/JS25/">JS25</a></h1>
-    <h1><a href="/TM17/">TM17</a></h1>
+    <div class="container">
+        <h1>Select a Game</h1>
+        <select id="gameSelector">
+            <option value="">Select a game...</option>
+            <option value="/JK25/">JK25</option>
+            <option value="/JS25/">JS25</option>
+            <option value="/TM17/">TM17</option>
+        </select>
+
+        <div id="gameContainer" class="game-container">
+            <div class="loading-indicator">Loading...</div>
+        </div>
+
+        <button onclick="toggleFullscreen()">Fullscreen</button>
+    </div>
+
+    <script>
+        document.getElementById('gameSelector').addEventListener('change', function() {
+            const selectedGame = this.value;
+            const gameContainer = document.getElementById('gameContainer');
+            if (selectedGame) {
+                gameContainer.innerHTML = `<iframe src="${selectedGame}" width="100%" height="auto" frameborder="0"></iframe>`;
+            } else {
+                gameContainer.innerHTML = '<div class="loading-indicator">Select a game to load.</div>';
+            }
+        });
+
+        function toggleFullscreen() {
+            const iframe = document.querySelector('iframe');
+            if (iframe.requestFullscreen) {
+                iframe.requestFullscreen();
+            } else if (iframe.mozRequestFullScreen) { // Firefox
+                iframe.mozRequestFullScreen();
+            } else if (iframe.webkitRequestFullscreen) { // Chrome, Safari and Opera
+                iframe.webkitRequestFullscreen();
+            } else if (iframe.msRequestFullscreen) { // IE/Edge
+                iframe.msRequestFullscreen();
+            }
+        }
+    </script>
+
 </body>
 </html>
