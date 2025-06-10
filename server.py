@@ -1,21 +1,33 @@
 import os
 from http.server import HTTPServer, BaseHTTPRequestHandler
+from urllib.parse import urlparse
 
 PORT = 8000
 
 class RequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
-        path = self.path.strip('/')
-        if path == '':
-            filename = 'index.html'
-        else:
-            filename = path
+        # Parse URL and remove query parameters
+        parsed_path = urlparse(self.path)
+        clean_path = parsed_path.path.strip('/')
+
+        # Default file
+        filename = 'index.html' if clean_path == '' else clean_path
 
         try:
             # Check if the file exists and is not a directory
             if os.path.exists(filename) and os.path.isfile(filename):
                 self.send_response(200)
-                self.send_header('Content-type', 'text/html')  # You can improve this later
+
+                # Very basic content-type detection (optional improvement)
+                if filename.endswith(".html"):
+                    self.send_header('Content-type', 'text/html')
+                elif filename.endswith(".css"):
+                    self.send_header('Content-type', 'text/css')
+                elif filename.endswith(".js"):
+                    self.send_header('Content-type', 'application/javascript')
+                else:
+                    self.send_header('Content-type', 'application/octet-stream')
+
                 self.end_headers()
                 with open(filename, 'rb') as f:
                     self.wfile.write(f.read())
