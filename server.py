@@ -4,6 +4,7 @@ from urllib.parse import urlparse
 
 PORT = 8000
 
+
 class RequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         # Parse URL and remove query parameters
